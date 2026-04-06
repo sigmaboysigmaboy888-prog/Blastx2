@@ -1,8 +1,5 @@
-[phases.setup]
-nixPkgs = ["nodejs_20"]
-
 [phases.install]
-cmds = ["npm install --legacy-peer-deps --ignore-scripts"]
+cmds = ["npm install --legacy-peer-deps"]
 
 [start]
 cmd = "node server.js"
