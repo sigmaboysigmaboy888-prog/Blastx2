@@ -229,9 +229,10 @@ async function createSession(phone, method, socket) {
     browser:                        ['WA Blast', 'Chrome', '120.0.6099.71'],
   };
 
-  // For pairing code: must use mobile: true
+  // Pairing code WAJIB mobile:true — tanpa ini WA tidak kirim notifikasi ke HP
   if (method === 'pairing') {
-    socketConfig.mobile = false; // pairing code works with mobile:false in latest Baileys
+    socketConfig.mobile  = true;
+    socketConfig.browser = ['Ubuntu', 'Chrome', '20.0.04'];
   }
 
   const waSocket = makeWASocket(socketConfig);
@@ -277,7 +278,7 @@ async function createSession(phone, method, socket) {
         delete reconnectTimers[`pair_${phone}`];
 
         let attempts = 0;
-        const maxAttempts = 3;
+        const maxAttempts = 5; // lebih banyak retry
 
         while (attempts < maxAttempts) {
           attempts++;
@@ -306,11 +307,11 @@ async function createSession(phone, method, socket) {
                 message: `Gagal mendapatkan pairing code setelah ${maxAttempts}x: ${err.message}`,
               });
             } else {
-              await sleep(3000); // wait before retry
+              await sleep(4000); // wait before retry
             }
           }
         }
-      }, 4000); // 4s wait for WS handshake
+      }, 6000); // 6s wait — mobile:true butuh lebih lama handshake
     }
 
     // ── Connected ────────────────────────────────────────────────────────────
